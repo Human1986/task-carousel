@@ -1,25 +1,52 @@
 package com.epam.rd.autotasks;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class TaskCarousel {
 
+    private final List<Task> tasks;
+    private final int capacity;
+    private int index = -1;
+
     public TaskCarousel(int capacity) {
-        throw new UnsupportedOperationException();
+        this.capacity = capacity;
+        this.tasks = new LinkedList<>();
     }
 
     public boolean addTask(Task task) {
-        throw new UnsupportedOperationException();
+        int value = 1;
+        if(task instanceof CountDownTask) value = ((CountDownTask) task).getValue();
+        if(!task.isFinished() && !isFull() && value != 0) {
+            return tasks.add(task);
+        }
+        return false;
     }
 
     public boolean execute() {
-        throw new UnsupportedOperationException();
+
+        if (!isEmpty()) {
+            index++;
+            if(index == tasks.size()) index = 0;
+            Task task = tasks.get(index);
+
+            task.execute();
+
+            if(task.isFinished()) {
+                tasks.remove(task);
+                index--;
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean isFull() {
-        throw new UnsupportedOperationException();
+        return tasks.size() == capacity;
     }
 
     public boolean isEmpty() {
-        throw new UnsupportedOperationException();
+        return tasks.isEmpty();
     }
 
 }
